@@ -1,0 +1,96 @@
+name = "Sample currency rate job"
+description = "A sample job which parses the latest currenecy exchange rates and loads the data into MySQL"
+author = "sample"
+schedule = "0 9 * * 1-5"
+
+[notifications.all]
+hipchat = "token@chan-id"
+
+[job.fetching]
+file = "http://www.dnb.no/portalfront/datafiles/miscellaneous/csv/kursliste.csv"
+
+[job.parsing]
+engine = "csv"
+[job.parsing.options]
+skip = 2
+
+[job.processing]
+  workers = 3
+  addColumns = ["date"]
+  allowEmpty = true
+
+  [[job.processing.columns]]
+  name = "1"
+  discard = true
+
+  [[job.processing.columns]]
+  name = "2"
+  mapping = "mengde"
+  type = "int"
+  failure = "reject"
+
+  [[job.processing.columns]]
+  name = "3"
+  mapping = "valuta"
+  type = "string"
+  failure = "reject"
+  length = 3
+  characterRange = ["A", "Z"]
+
+  [[job.processing.columns]]
+  name = "4"
+  discard = true
+
+  [[job.processing.columns]]
+  name = "5"
+  mapping = "sjekk_kjop"
+  type = "float"
+  failure = "keep"
+  presicion = 4
+
+  [[job.processing.columns]]
+  name = "6"
+  mapping = "sjekk_salg"
+  type = "float"
+  failure = "keep"
+  precision = 4
+
+  [[job.processing.columns]]
+  name = "7"
+  mapping = "endring"
+  type = "float"
+  failure = "keep"
+  precision = 4
+
+  [[job.processing.columns]]
+  name = "8"
+  mapping = "sedler_kjop"
+  type = "float"
+  failure = "keep"
+  precision = 4
+
+  [[job.processing.columns]]
+  name = "9"
+  mapping = "sedler_salg"
+  type = "float"
+  failure = "keep"
+  precision = 4
+
+  [[job.processing.columns]]
+  name = "10"
+  mapping = "referansekurs"
+  type = "float"
+  failure = "keep"
+  precision = 4
+
+  [[job.processing.columns]]
+  name = "date"
+  mapping = "date"
+  type = "string"
+  transform = "{{ Now \"2006-01-02\" }}"
+  
+[job.outputting]
+engine = "mysql"
+[job.outputting.options]
+dsn = "root:root@unix(/var/run/mysqld/mysqld.sock)/data"
+table = "currencies"

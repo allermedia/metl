@@ -1,0 +1,5 @@
+github.com/jwaldrip/odin  4c5385b8d28ed0041f0054890ba8059f3245d6b7
+github.com/Sirupsen/logrus 965349de21e7b1e9e80b6ae02e093f1522516ef3
+github.com/BurntSushi/toml 2ceedfee35ad3848e49308ab0c9a4f640cfb5fb2
+github.com/go-sql-driver/mysql 9543750295406ef070f7de8ae9c43ccddd44e15e
+github.com/tbruyelle/hipchat-go c2364b4acfdeb7bb4ce232fa53bc80b5d741d668

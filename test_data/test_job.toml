@@ -1,0 +1,58 @@
+name = "test job"
+description = "test job description"
+author = "test"
+schedule = "00 22 * * *"
+
+[notifications.all]
+hipchat = "token@room"
+[notifications.warnings]
+email = ["email@email"]
+[notifications.fatals]
+email = ["email@email"]
+
+
+[job.fetching]
+file = "file://test_data/test.csv"
+options = []
+
+[job.parsing]
+engine = "csv"
+[job.parsing.options]
+header = true
+
+[job.processing]
+  workers = 3
+  [[job.processing.columns]]
+  name = "A"
+  mapping = "COLUMN A"
+  type = "int"
+  transform = "{{ printf \"%03s\" . }}"
+  failure = "reject"
+
+  [[job.processing.columns]]
+  name = "B"
+  mapping = "COLUMN B"
+  type = "string"
+  transform = "{{ toUpper . }}"
+  failure = "keep"
+
+  [[job.processing.columns]]
+  name = "C"
+  mapping = "COLUMN C"
+  type = "bool"
+  failure = "keep"
+
+  [[job.processing.columns]]
+  name = "D"
+  discard = true
+
+  [[job.processing.columns]]
+  name = "E"
+  mapping = "COLUMN D"
+  type = "string"
+  transform = "{{ toLower . }}"
+  failure = "keep"
+
+[job.outputting]
+engine = "stdout"
+[job.outputting.options]
